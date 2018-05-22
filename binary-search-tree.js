@@ -226,16 +226,63 @@ class BadBinarySearchTree {
   }
 }
 
+// Third largest node
+// Write an algorithm to find the third largest node in a binary search tree
+
+//could we map and sort (high to low) node keys into and array and grab the arr[2] 
+//could we traverse the right first keeping a count and when get to 3 return the value
+
+
+function largest( tree, nth ) {
+  if(tree.key == null)
+    return null;
+  var state = {n: nth, result:null};
+  nth_largest(tree, state);
+  return state.result;
+}
+//helper function
+function nth_largest(tree, state) { 
+  //Finding the largest node means traversing the right first.
+  if (tree.right) {
+    nth_largest(tree.right, state);
+    if (state.result) return;
+  }
+  if (!--state.n) { 
+    //Found it.
+    state.result = tree.key; 
+    return;
+  }
+  if (tree.left) nth_largest(tree.left, state);
+}
+
+//Below trying to use count to solve...only works for right side now
+// function thirdLargest(node, count=1) {
+//   if(node === null) {
+//     return null;
+//   }
+//   //base case
+//   if (count === 3) {
+//     return node.key;
+//   }
+//   //general case
+//   // if (node.right || node.left) {
+//   return (
+//     thirdLargest(node.right, count +1) || thirdLargest(node.left, count +1));
+// }
+
+
+
+
 function main() {
   let BST = new BinarySearchTree();
   BST.insert(3);
   BST.insert(1);
   BST.insert(4);
   BST.insert(6);
-  BST.insert(9);
-  BST.insert(2);
-  BST.insert(5);
-  BST.insert(7);
+  // BST.insert(9);
+  // BST.insert(2);
+  // BST.insert(5);
+  // BST.insert(7);
   // console.log(BST);
   // console.log(heightBST(BST));
   let BadBST = new BadBinarySearchTree();
@@ -250,6 +297,8 @@ function main() {
   console.log(isBST2(BadBST));
   // console.log(isBST3(BST));
   // console.log(isBST3(BadBST));
+  // console.log(thirdLargest(BST));
+  console.log(largest( BST, 3 ));
 }
 
 main();
