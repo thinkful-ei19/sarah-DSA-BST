@@ -95,7 +95,16 @@ class BinarySearchTree {
     }
     return this.left._findMin();
   }
+
+  _findMax() {
+    if (!this.right) {
+      return this;
+    }
+    return this.right._findMax();
+  }
 }
+
+
 
 function heightBST(BST) {
   if (BST === null) {
@@ -103,7 +112,7 @@ function heightBST(BST) {
   } else if (!BST.left && !BST.right) {
     return 1;
   } else if (BST.left || BST.right) {
-    // console.log(Math.max(heightBST(BST.left), heightBST(BST.right) + 1));
+    // console.log(Math.max(heightBST(BST.left), heightBST(BST.right)) + 1);
     return Math.max(heightBST(BST.left), heightBST(BST.right)) + 1;
   }
 }
@@ -111,6 +120,111 @@ function heightBST(BST) {
 // is it BST?
 // Write an algorithm to check whether an arbitrary binary tree is a binary search tree, assuming the tree does not contain duplicates
 
+//input: binary tree, output: boolean
+//everything on left will be less than parent and everything on right will be greater than parent if true
+//make bad binary tree output will be false
+
+function isBST(node) {
+  if(node.left) {
+    if(node.left.key > node.key) {
+      return false;
+    }
+    if(!isBST(node.left)){
+      return false;
+    }
+  }
+  if(node.right) {
+    if(node.right.key < node.key) {
+      return false;
+    }
+    if(!isBST(node.right)){
+      return false;
+    }
+  }
+  return true;
+}
+
+function isBST2(node, min, max) {
+  // if (node === null) {
+  //   return true;
+  // }
+  if (min !== undefined && node.key < min) {
+    return false;
+  }
+  if (max !== undefined && node.key > max) {
+    return false;
+  }
+  if (node.left && !isBST2(node.left, min, node.key)) {
+    return false;
+  }
+  if (node.right && !isBST2(node.right, node.key, max)) {
+    return false;
+  }
+  return true;
+  // else if (node.key <= node.left || node.key >= node.right) {
+  //   console.log(BST.key);
+  //   return false
+  // }
+  // return isBST2(node.key, node.left) && isBST2(BST.key, BST.right);
+}
+
+//sork on this implementation later
+function isBST3(node, min=Number.NEGATIVE_INFINITY, max=Number.POSITIVE_INFINITY) {
+  if (!node) return true;
+  if (node.key < min || node.key > max) {
+    return false;
+  }
+  return (
+    isBST3(node.left, min, node.key - 1) &&
+    isBST3(node.right, node.key + 1, min)
+  );
+}
+
+
+class BadBinarySearchTree {
+  constructor(key=null, value=null, parent=null) {
+    this.key = key;
+    this.value = value;
+    this.parent = parent;
+    this.left = null;
+    this.right = null;
+  }
+
+  insert(key, value) {
+    //if the tree is empty then this key being inserted is the root node of the tree
+    if (this.key == null) {
+      this.key = key;
+      this.value = value;
+    } else if (key > this.key) {  
+      if (this.left == null) {
+        this.left = new BadBinarySearchTree(key, value, this);
+      } else {
+        this.left.insert(key, value);
+      }
+    } else {
+      if (this.right == null) {
+        this.right = new BadBinarySearchTree(key, value, this);
+      }
+      else {
+        this.right.insert(key, value);
+      }
+    }
+  }
+
+  _findMin() {
+    if (!this.left) {
+      return this;
+    }
+    return this.left._findMin();
+  }
+
+  _findMax() {
+    if (!this.right) {
+      return this;
+    }
+    return this.right._findMax();
+  }
+}
 
 function main() {
   let BST = new BinarySearchTree();
@@ -123,7 +237,19 @@ function main() {
   BST.insert(5);
   BST.insert(7);
   // console.log(BST);
-  console.log(heightBST(BST));
+  // console.log(heightBST(BST));
+  let BadBST = new BadBinarySearchTree();
+  BadBST.insert(4, 4);
+  BadBST.insert(3, 3);
+  BadBST.insert(2, 2);
+  BadBST.insert(7, 7);
+  // console.log(BadBST);
+  console.log(isBST(BST));
+  console.log(isBST(BadBST));
+  console.log(isBST2(BST, BST._findMin(), BST._findMax()));
+  console.log(isBST2(BadBST));
+  // console.log(isBST3(BST));
+  // console.log(isBST3(BadBST));
 }
 
 main();
