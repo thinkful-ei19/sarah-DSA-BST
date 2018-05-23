@@ -270,7 +270,27 @@ function nth_largest(tree, state) {
 //     thirdLargest(node.right, count +1) || thirdLargest(node.left, count +1));
 // }
 
+// Balanced BST
+// Write an algorithm that checks if a BST is balanced (i.e. a tree where no two leaves differ in distance from the root by more than one).
 
+//can find the greatest height and smallest height to calculate the max difference in distance from the root node. If max distance > 1 then it is not balanced.
+
+//helper for balanced BST
+function minHeightBST(BST) {
+  if (BST === null) {
+    return 0;
+  } else if (!BST.left && !BST.right) {
+    return 1;
+  } else if (BST.left || BST.right) {
+    return Math.min(heightBST(BST.left), heightBST(BST.right)) + 1;
+  }
+}
+
+function balanced(BST) {
+  if (heightBST(BST) - minHeightBST(BST) > 1) {
+    return false;
+  } return true;
+}
 
 
 function main() {
@@ -279,9 +299,9 @@ function main() {
   BST.insert(1);
   BST.insert(4);
   BST.insert(6);
-  // BST.insert(9);
-  // BST.insert(2);
-  // BST.insert(5);
+  BST.insert(9);
+  BST.insert(2);
+  BST.insert(5);
   // BST.insert(7);
   // console.log(BST);
   // console.log(heightBST(BST));
@@ -299,6 +319,8 @@ function main() {
   // console.log(isBST3(BadBST));
   // console.log(thirdLargest(BST));
   console.log(largest( BST, 3 ));
+  console.log(minHeightBST(BST));
+  console.log(balanced(BST));
 }
 
 main();

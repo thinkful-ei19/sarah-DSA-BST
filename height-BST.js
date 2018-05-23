@@ -16,7 +16,7 @@ function heightBST(BST) {
   } else if (!BST.left && !BST.right) {
     return 1;
   } else if (BST.left || BST.right) {
-    return Math.max(heightBST(BST.left), heightBST(BST.right) + 1);
+    return Math.max(heightBST(BST.left), heightBST(BST.right)) + 1;
   }
 }
 
